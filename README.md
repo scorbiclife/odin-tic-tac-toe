@@ -1,1 +1,1 @@
-# odin-template
+# odin-tic-tac-toe
