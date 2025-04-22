@@ -137,11 +137,7 @@ const game = (function makeGameModule() {
     }
 
     function board() {
-      return _board;
-    }
-
-    function showBoardState() {
-      console.log(_board.getBoardState());
+      return _board.board();
     }
 
     function reset() {
@@ -191,7 +187,6 @@ const game = (function makeGameModule() {
       status,
       board,
       reset,
-      showBoardState,
       currentPlayer,
       makeMove,
     };
