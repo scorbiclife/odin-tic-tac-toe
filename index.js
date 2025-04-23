@@ -131,7 +131,7 @@ const game = (function makeGameModule() {
     let _board = makeGameboard();
     let _player1 = makePlayer(1, _board);
     let _player2 = makePlayer(2, _board);
-    
+
     function status() {
       return _status;
     }
@@ -161,9 +161,10 @@ const game = (function makeGameModule() {
       const boardStatus = _board.getBoardStatus();
       switch (boardStatus) {
         case BOARD_STATUS.PLAYING:
-          _status = _status === GAME_STATUS.PLAYER_ONE_TURN
-            ? GAME_STATUS.PLAYER_TWO_TURN
-            : GAME_STATUS.PLAYER_ONE_TURN;
+          _status =
+            _status === GAME_STATUS.PLAYER_ONE_TURN
+              ? GAME_STATUS.PLAYER_TWO_TURN
+              : GAME_STATUS.PLAYER_ONE_TURN;
           break;
         case BOARD_STATUS.PLAYER_ONE_WIN:
           _status = GAME_STATUS.PLAYER_ONE_WIN;
@@ -197,3 +198,29 @@ const game = (function makeGameModule() {
   const game = makeGame();
   return game;
 })();
+
+const gameController = (function makeGameView() {
+  function showGameBoard() {
+    const board = game.board();
+    for (const row of [0, 1, 2]) {
+      for (const column of [0, 1, 2]) {
+        const $cell = document.querySelector(
+          `#tic_tac_toe [data-row="${row}"][data-column="${column}"]`
+        );
+        if ($cell) {
+          $cell.textContent =
+            board[row][column] === 0
+              ? ""
+              : board[row][column] === 1
+              ? "O"
+              : "X";
+        }
+      }
+    }
+  }
+  return {
+    showGameBoard,
+  };
+})();
+
+gameController.showGameBoard();
