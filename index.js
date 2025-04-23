@@ -218,9 +218,25 @@ const gameController = (function makeGameView() {
       }
     }
   }
+
+  function handleCellClick(event) {
+    const $clickedCell = event.target;
+    const row = Number($clickedCell.dataset.row);
+    const column = Number($clickedCell.dataset.column);
+    try {
+      game.makeMove(row, column);
+    } catch (error) {
+    }
+    showGameBoard();
+  }
+
   return {
     showGameBoard,
+    handleCellClick,
   };
 })();
 
 gameController.showGameBoard();
+
+const $ticTacToe = document.getElementById("tic_tac_toe");
+$ticTacToe?.addEventListener("click", gameController.handleCellClick);
