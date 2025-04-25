@@ -1,3 +1,12 @@
+// The game status types are shared between the game and the controller
+const GAME_STATUS = Object.freeze({
+  PLAYER_ONE_TURN: 1,
+  PLAYER_TWO_TURN: 2,
+  PLAYER_ONE_WIN: 3,
+  PLAYER_TWO_WIN: 4,
+  TIE: 5,
+});
+
 const game = (function makeGameModule() {
   const BOARD_STATUS = Object.freeze({
     PLAYING: 0,
@@ -115,14 +124,6 @@ const game = (function makeGameModule() {
       replaceBoardWith: replaceBoard,
     };
   }
-
-  const GAME_STATUS = Object.freeze({
-    PLAYER_ONE_TURN: 1,
-    PLAYER_TWO_TURN: 2,
-    PLAYER_ONE_WIN: 3,
-    PLAYER_TWO_WIN: 4,
-    TIE: 5,
-  });
 
   /** Object that controls the game flow itself */
   function makeGame() {
