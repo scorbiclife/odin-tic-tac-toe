@@ -225,6 +225,7 @@ const game = (function makeGameModule() {
   function updateGameView() {
     showGameStatus(game.status());
     showGameBoard();
+    showGameInputStatus();
   }
 
   function showGameStatus(gameStatus) {
@@ -238,6 +239,45 @@ const game = (function makeGameModule() {
     const statusMessage = messageByGameStatus[gameStatus](playerName);
     if ($status !== null) {
       $status.textContent = statusMessage;
+    }
+  }
+
+  // This is separate from `GAME_STATUS` because of the handling of invalid input.
+  // The `game` core assumes all inputs are valid and throws on invalid input.
+  // The invalid input is handled solely the controller.
+  // This is partly possible because whether the last input was valid or not
+  // is orthogonal to the current state of the game.
+  const GAME_VIEW_STATUS = {
+    input: {
+      valid: true,
+      data: null,
+    },
+  };
+
+  function handleValidInput() {
+    GAME_VIEW_STATUS.input = {
+      valid: true,
+      data: null,
+    };
+  }
+
+  function handleInvalidInput(error) {
+    GAME_VIEW_STATUS.input = {
+      valid: false,
+      data: error,
+    };
+  }
+
+  function showGameInputStatus() {
+    const $inputStatus = document.getElementById("input-status");
+    if ($inputStatus === null) {
+      return;
+    }
+    if (GAME_VIEW_STATUS.input.valid) {
+      $inputStatus.hidden = true;
+    } else {
+      $inputStatus.textContent = GAME_VIEW_STATUS.input.data?.message ?? "Unknown Error!";
+      $inputStatus.hidden = false;
     }
   }
 
@@ -266,7 +306,10 @@ const game = (function makeGameModule() {
     const column = Number($clickedCell.dataset.column);
     try {
       game.makeMove(row, column);
-    } catch (error) {}
+      handleValidInput();
+    } catch (error) {
+      handleInvalidInput(error);
+    }
     updateGameView();
   }
 
