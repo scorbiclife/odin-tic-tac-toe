@@ -201,6 +201,45 @@ const game = (function makeGameModule() {
 })();
 
 const gameController = (function makeGameView() {
+  const messageByGameStatus = {
+    [GAME_STATUS.PLAYER_ONE_TURN]: function (playerOneName) {
+      return `Current Turn: ${playerOneName} (O)`;
+    },
+    [GAME_STATUS.PLAYER_TWO_TURN]: function (playerTwoName) {
+      return `Current Turn: ${playerTwoName} (X)`;
+    },
+    [GAME_STATUS.PLAYER_ONE_WIN]: function (playerOneName) {
+      return `Winner: ${playerOneName} (O)`;
+    },
+    [GAME_STATUS.PLAYER_TWO_WIN]: function (playerTwoName) {
+      return `Winner: ${playerTwoName} (X)`;
+    },
+    [GAME_STATUS.TIE]: function () {
+      return "Tie!";
+    },
+  };
+
+  const $status = document.getElementById("status");
+
+  function updateGameView() {
+    showGameStatus(game.status());
+    showGameBoard();
+  }
+
+  function showGameStatus(gameStatus) {
+    const playerName = [
+      GAME_STATUS.PLAYER_ONE_TURN,
+      GAME_STATUS.PLAYER_ONE_WIN,
+      GAME_STATUS.TIE,
+    ].includes(gameStatus)
+      ? "Player 1"
+      : "Player 2";
+    const statusMessage = messageByGameStatus[gameStatus](playerName);
+    if ($status !== null) {
+      $status.textContent = statusMessage;
+    }
+  }
+
   function showGameBoard() {
     const board = game.board();
     for (const row of [0, 1, 2]) {
@@ -226,18 +265,17 @@ const gameController = (function makeGameView() {
     const column = Number($clickedCell.dataset.column);
     try {
       game.makeMove(row, column);
-    } catch (error) {
-    }
-    showGameBoard();
+    } catch (error) {}
+    updateGameView();
   }
 
   return {
-    showGameBoard,
+    updateGameView,
     handleCellClick,
   };
 })();
 
-gameController.showGameBoard();
+gameController.updateGameView();
 
 const $ticTacToe = document.getElementById("tic_tac_toe");
 $ticTacToe?.addEventListener("click", gameController.handleCellClick);
