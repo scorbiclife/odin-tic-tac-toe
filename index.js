@@ -200,7 +200,8 @@ const game = (function makeGameModule() {
   return game;
 })();
 
-const gameController = (function makeGameView() {
+// Initialize gameController
+(function makeGameView() {
   const messageByGameStatus = {
     [GAME_STATUS.PLAYER_ONE_TURN]: function (playerOneName) {
       return `Current Turn: ${playerOneName} (O)`;
@@ -269,13 +270,11 @@ const gameController = (function makeGameView() {
     updateGameView();
   }
 
-  return {
-    updateGameView,
-    handleCellClick,
-  };
+  function initializeGame() {
+    updateGameView();
+    const $ticTacToe = document.getElementById("tic_tac_toe");
+    $ticTacToe?.addEventListener("click", handleCellClick);
+  }
+
+  initializeGame();
 })();
-
-gameController.updateGameView();
-
-const $ticTacToe = document.getElementById("tic_tac_toe");
-$ticTacToe?.addEventListener("click", gameController.handleCellClick);
